@@ -79,6 +79,10 @@ tauri-plugin-updater = "2"
 
 [profile.dev]
 debug = 0
+incremental = true
+
+[profile.dev.package."*"]
+opt-level = 1
 
 [profile.release]
 opt-level = 3

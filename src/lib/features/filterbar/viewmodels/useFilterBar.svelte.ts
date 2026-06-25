@@ -10,6 +10,8 @@ import musicStore from '$lib/stores/music.svelte';
 import playlistStore from '$lib/stores/playlist.svelte';
 import PlaylistService from '$lib/services/PlaylistService.svelte';
 import SidebarService from '$lib/services/SidebarService.svelte';
+import PageService from '$lib/services/PageService.svelte';
+import { PageRoutes } from '$lib/constants/PageRoutes';
 import { SidebarType } from '$lib/features/sidebar/types';
 
 const RESPONSIVE_RULES = [
@@ -138,6 +140,10 @@ function handleQueueButton() {
 	SidebarService.toggle(SidebarType.Right);
 }
 
+function handleSettingsButton() {
+	PageService.goTo(PageRoutes.SETTINGS);
+}
+
 export function useFilterBar() {
 	return {
 		state,
@@ -159,6 +165,7 @@ export function useFilterBar() {
 		confirmPlaylistCreation,
 		cancelPlaylistCreation,
 		handleMenuButton,
-		handleQueueButton
+		handleQueueButton,
+		handleSettingsButton
 	};
 }

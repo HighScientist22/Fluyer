@@ -11,6 +11,7 @@
 	const shortcuts = [
 		{ keys: `${mod} H`, action: 'Go to Home' },
 		{ keys: `${mod} K`, action: 'Focus search' },
+		{ keys: `${mod} ,`, action: 'Open Settings' },
 		{ keys: 'Space', action: 'Play / Pause' },
 		{ keys: `${mod} ←`, action: 'Previous track' },
 		{ keys: `${mod} →`, action: 'Next track' },

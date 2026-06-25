@@ -49,6 +49,142 @@ pub struct ArtistSummary {
     pub track_count: usize,
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct FocusMix {
+    pub id: String,
+    pub title: String,
+    pub subtitle: String,
+    pub paths: Vec<String>,
+    pub artwork_path: Option<String>,
+    pub prefers_shuffle: bool,
+}
+
+fn normalize_genre_key(genre: &str) -> String {
+    genre
+        .to_lowercase()
+        .replace(['&', '/'], " ")
+        .replace(['-', '_'], " ")
+        .split_whitespace()
+        .collect::<Vec<_>>()
+        .join(" ")
+}
+
+fn primary_genre(raw: &str) -> Option<String> {
+    let genre = raw.split(&[',', ';', '/'][..]).next()?.trim();
+    if genre.is_empty() {
+        None
+    } else {
+        Some(genre.to_string())
+    }
+}
+
+pub fn get_library_genre_stats(limit: usize) -> Result<Vec<GenreStat>, String> {
+    let tracks = crate::folder::database::get_tracks();
+    let mut map: HashMap<String, (String, usize)> = HashMap::new();
+
+    for track in tracks {
+        let raw = match track.genre.as_deref().filter(|g| !g.is_empty()) {
+            Some(g) => g,
+            None => continue,
+        };
+        let display = match primary_genre(raw) {
+            Some(d) => d,
+            None => continue,
+        };
+        let key = normalize_genre_key(&display);
+        let entry = map.entry(key).or_insert((display, 0));
+        entry.1 += 1;
+    }
+
+    let mut stats: Vec<GenreStat> = map
+        .into_values()
+        .map(|(genre, count)| GenreStat {
+            genre,
+            play_count: count,
+            listen_seconds: 0.0,
+        })
+        .collect();
+
+    stats.sort_by(|a, b| b.play_count.cmp(&a.play_count));
+    stats.truncate(limit);
+    Ok(stats)
+}
+
+pub fn get_album_track_paths(album: &str) -> Result<Vec<String>, String> {
+    let album_lower = album.to_lowercase();
+    Ok(crate::folder::database::get_tracks()
+        .into_iter()
+        .filter(|track| {
+            track
+                .album
+                .as_ref()
+                .map(|name| name.to_lowercase() == album_lower)
+                .unwrap_or(false)
+        })
+        .map(|track| track.path)
+        .collect())
+}
+
+pub fn get_discover_mixes(max_mixes: usize) -> Result<Vec<FocusMix>, String> {
+    let played = get_played_paths()?;
+    let tracks = crate::folder::database::get_tracks();
+    let mut genre_map: HashMap<String, (String, Vec<String>)> = HashMap::new();
+
+    for track in tracks {
+        let raw = match track.genre.as_deref().filter(|g| !g.is_empty()) {
+            Some(g) => g,
+            None => continue,
+        };
+        let display = match primary_genre(raw) {
+            Some(d) => d,
+            None => continue,
+        };
+        let key = normalize_genre_key(&display);
+        genre_map
+            .entry(key)
+            .or_insert_with(|| (display, Vec::new()))
+            .1
+            .push(track.path);
+    }
+
+    let mut candidates: Vec<(String, String, Vec<String>)> = genre_map
+        .into_iter()
+        .map(|(key, (display, paths))| {
+            let unheard: Vec<String> = paths
+                .into_iter()
+                .filter(|path| !played.contains(path))
+                .collect();
+            (key, display, unheard)
+        })
+        .filter(|(_, _, unheard)| unheard.len() >= 8)
+        .collect();
+
+    candidates.sort_by(|a, b| b.2.len().cmp(&a.2.len()));
+
+    let mut mixes = Vec::new();
+    let mut seen = HashSet::new();
+
+    for (key, display, unheard) in candidates {
+        if !seen.insert(key) {
+            continue;
+        }
+        mixes.push(FocusMix {
+            id: format!("unheard-{}", key.replace(' ', "-")),
+            title: format!("Discover {}", display),
+            subtitle: format!("{} unheard tracks", unheard.len()),
+            artwork_path: unheard.first().cloned(),
+            paths: unheard.into_iter().take(30).collect(),
+            prefers_shuffle: true,
+        });
+        if mixes.len() >= max_mixes {
+            break;
+        }
+    }
+
+    Ok(mixes)
+}
+
 pub fn record_play(path: &str, duration_seconds: f64) -> Result<(), String> {
     let db = GLOBAL_DATABASE.lock().map_err(|e| e.to_string())?;
     let conn = db.as_ref().ok_or("Database not initialized")?;

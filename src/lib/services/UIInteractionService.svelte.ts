@@ -6,6 +6,8 @@ import shortcutStore from '$lib/stores/shortcut.svelte';
 import { Modal } from '$lib/constants/Modal';
 import ModalService from '$lib/services/ModalService.svelte';
 import filterStore from '$lib/stores/filter.svelte';
+import PageService from '$lib/services/PageService.svelte';
+import { PageRoutes } from '$lib/constants/PageRoutes';
 
 function isTypingTarget(target: Element) {
 	return target.matches('input, textarea, select, [contenteditable="true"]');
@@ -45,6 +47,12 @@ const UIInteractionService = {
 					e.preventDefault();
 					shortcutStore.showHelp = true;
 					ModalService.open(Modal.KeyboardShortcuts);
+					return;
+				}
+
+				if (isMeta(e) && e.key === ',' && !isTypingTarget(target)) {
+					e.preventDefault();
+					PageService.goTo(PageRoutes.SETTINGS);
 					return;
 				}
 

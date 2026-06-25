@@ -1,7 +1,8 @@
 use crate::stats::{
-    get_artists, get_favorite_paths, get_genre_stats, get_library_stats, get_recent_played,
-    get_recently_added, is_favorite, record_play, toggle_favorite, ArtistSummary, GenreStat,
-    LibraryStats, RecentAlbum,
+    get_album_track_paths, get_artists, get_discover_mixes, get_favorite_paths,
+    get_genre_stats, get_library_genre_stats, get_library_stats, get_recent_played,
+    get_recently_added, is_favorite, record_play, toggle_favorite, ArtistSummary, FocusMix,
+    GenreStat, LibraryStats, RecentAlbum,
 };
 
 #[tauri::command]
@@ -27,6 +28,21 @@ pub fn stats_recently_added_get(limit: usize) -> Result<Vec<RecentAlbum>, String
 #[tauri::command]
 pub fn stats_genre_get(limit: usize) -> Result<Vec<GenreStat>, String> {
     get_genre_stats(limit)
+}
+
+#[tauri::command]
+pub fn stats_library_genres_get(limit: usize) -> Result<Vec<GenreStat>, String> {
+    get_library_genre_stats(limit)
+}
+
+#[tauri::command]
+pub fn stats_album_paths_get(album: String) -> Result<Vec<String>, String> {
+    get_album_track_paths(&album)
+}
+
+#[tauri::command]
+pub fn stats_discover_mixes_get(max_mixes: usize) -> Result<Vec<FocusMix>, String> {
+    get_discover_mixes(max_mixes)
 }
 
 #[tauri::command]

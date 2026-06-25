@@ -22,6 +22,15 @@ const TauriStatsAPI = {
 
 	getGenreStats: (limit = 8) => invoke<GenreStat[]>(TauriCommands.STATS_GENRE_GET, { limit }),
 
+	getLibraryGenreStats: (limit = 8) =>
+		invoke<GenreStat[]>(TauriCommands.STATS_LIBRARY_GENRES_GET, { limit }),
+
+	getAlbumTrackPaths: (album: string) =>
+		invoke<string[]>(TauriCommands.STATS_ALBUM_PATHS_GET, { album }),
+
+	getDiscoverMixes: (maxMixes = 4) =>
+		invoke<FocusMix[]>(TauriCommands.STATS_DISCOVER_MIXES_GET, { maxMixes }),
+
 	getArtists: (limit = 12) => invoke<ArtistSummary[]>(TauriCommands.STATS_ARTISTS_GET, { limit }),
 
 	toggleFavorite: (path: string) => invoke<boolean>(TauriCommands.FAVORITES_TOGGLE, { path }),

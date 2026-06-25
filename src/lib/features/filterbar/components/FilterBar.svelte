@@ -43,8 +43,20 @@
 		{isWindows() || isLinux() ? 'me-[100px] sm:me-0' : ''}
 		{isMobile()
 			? 'grid-cols-[min-content_1fr_min-content_min-content] sm:grid-cols-[min-content_min-content_1fr]'
-			: 'grid-cols-[1fr_min-content_min-content] sm:grid-cols-[min-content_1fr]'}"
+			: 'grid-cols-[min-content_min-content_1fr] sm:grid-cols-[min-content_min-content_1fr]'}"
 	>
+		{#if !isMobile()}
+			<Button
+				class="pointer-events-auto grid aspect-square h-9 justify-center rounded"
+				onclick={vm.handleMenuButton}
+				title="Menu"
+			>
+				<div class="w-5">
+					<Icon type={IconType.Menu} />
+				</div>
+			</Button>
+		{/if}
+
 		{#if isMobile()}
 			<Button
 				class="pointer-events-auto grid aspect-square h-9 justify-center rounded sm:p-0"
@@ -178,6 +190,16 @@
 			bind:value={filterStore.search}
 			bind:inputElement={searchInput}
 		/>
+
+		<Button
+			class="pointer-events-auto grid aspect-square h-9 justify-center rounded"
+			onclick={vm.handleSettingsButton}
+			title="Settings"
+		>
+			<div class="w-5">
+				<Icon type={IconType.Settings} />
+			</div>
+		</Button>
 
 		{#if isMobile()}
 			<Button
