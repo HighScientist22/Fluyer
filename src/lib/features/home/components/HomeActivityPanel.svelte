@@ -2,7 +2,6 @@
 	import type { RecentActivityTab, RecentAlbum } from '$lib/features/home/types';
 	import StatsService from '$lib/services/StatsService.svelte';
 	import HomeMediaTile from './HomeMediaTile.svelte';
-	import View from '$lib/ui/components/View.svelte';
 
 	interface Props {
 		items: RecentAlbum[];
@@ -16,62 +15,54 @@
 		$props();
 </script>
 
-<section>
-	<View
-		class="home-activity-panel overflow-hidden rounded-2xl p-5"
-		glassEnableBlur
-		style="--panel-accent: {accent}"
-	>
-		<div class="mb-4 flex items-center justify-between">
-			<h2 class="text-xs font-semibold uppercase tracking-widest text-white/90">Recent Activity</h2>
-			<div class="flex gap-4">
-				{#each ['played', 'added'] as t}
-					<button
-						class="relative pb-1 text-[10px] font-semibold uppercase tracking-wider transition-colors
-						{tab === t ? 'text-white' : 'text-white/50 hover:text-white/75'}"
-						onclick={() => ontabchange(t as RecentActivityTab)}
-					>
-						{t}
-						{#if tab === t}
-							<span
-								class="absolute bottom-0 left-0 h-0.5 w-full rounded-full"
-								style="background: {accent}"
-							></span>
-						{/if}
-					</button>
-				{/each}
-			</div>
+<section class="liquid-glass-accent-panel min-w-0">
+	<div class="flex items-center justify-between gap-4 px-5 pb-4 pt-[18px]">
+		<h2 class="text-xs font-semibold uppercase tracking-[0.08em] text-white/70">Recent Activity</h2>
+		<div class="flex gap-1">
+			{#each ['played', 'added'] as t}
+				<button
+					class="relative px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide transition-colors
+					{tab === t ? 'text-white' : 'text-white/50 hover:text-white/80'}"
+					onclick={() => ontabchange(t as RecentActivityTab)}
+				>
+					{t === 'played' ? 'Played' : 'Added'}
+					{#if tab === t}
+						<span class="absolute inset-x-1 -bottom-0.5 h-0.5 rounded-full bg-white"></span>
+					{/if}
+				</button>
+			{/each}
 		</div>
+	</div>
 
-		{#if items.length === 0}
-			<p class="text-opacity-background-60 py-8 text-center text-sm">
-				{tab === 'played'
-					? 'Play something to see your listening history here.'
-					: 'Add music folders to populate your library.'}
-			</p>
-		{:else}
-			<div class="home-carousel -mx-1 flex gap-4 overflow-x-auto px-1 pb-1">
-				{#each items as item}
-					<HomeMediaTile
-						title={item.album}
-						subtitle={item.artist}
-						path={item.path}
-						badge={item.playedAt
-							? StatsService.formatRelativeTime(item.playedAt)
-							: item.badge}
-						{accent}
-						onplay={() => onplay(item)}
-					/>
-				{/each}
-			</div>
-		{/if}
-	</View>
+	{#if items.length === 0}
+		<p class="text-opacity-background-60 px-5 pb-5 text-center text-sm">
+			{tab === 'played'
+				? 'Nothing played yet'
+				: 'No recent additions'}
+		</p>
+	{:else}
+		<div class="home-carousel flex h-[228px] gap-6 overflow-x-auto px-5 pb-5">
+			{#each items as item}
+				<HomeMediaTile
+					title={item.album}
+					subtitle={item.artist}
+					path={item.path}
+					badge={item.playedAt
+						? StatsService.formatRelativeTime(item.playedAt)
+						: item.badge}
+					{accent}
+					onplay={() => onplay(item)}
+				/>
+			{/each}
+		</div>
+	{/if}
 </section>
 
 <style lang="scss">
-	.home-activity-panel {
-		background: color-mix(in srgb, var(--panel-accent, rgb(99, 102, 241)) 35%, transparent);
-		border: 1px solid rgba(255, 255, 255, 0.12);
-		backdrop-filter: blur(24px);
+	.home-carousel {
+		scrollbar-width: none;
+		&::-webkit-scrollbar {
+			display: none;
+		}
 	}
 </style>

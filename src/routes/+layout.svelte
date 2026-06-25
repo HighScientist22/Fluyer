@@ -27,6 +27,7 @@
 	import PlaylistService from '$lib/services/PlaylistService.svelte';
 	import LibraryService from '$lib/services/LibraryService.svelte';
 	import UpdateService from '$lib/services/UpdateService.svelte';
+	import ThemeService from '$lib/services/ThemeService.svelte';
 
 	if (isLinux()) {
 		import('$lib/scss/linux.scss');
@@ -56,7 +57,8 @@
 			MetadataService.initialize(),
 			PlaylistService.initialize(),
 			StatsService.initialize(),
-			LibraryService.initialize()
+			LibraryService.initialize(),
+			ThemeService.initialize()
 		]);
 
 		if (isDesktop()) {

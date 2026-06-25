@@ -1,4 +1,10 @@
-import type { FocusMix, LibraryStats, RecentAlbum, ArtistSummary, GenreStat } from '$lib/features/home/types';
+import type {
+	FocusMix,
+	LibraryStats,
+	RecentAlbum,
+	ArtistSummary,
+	GenreStat
+} from '$lib/features/home/types';
 import TauriStatsAPI from '$lib/tauri/TauriStatsAPI';
 import TauriLibraryAPI, { CollectionType } from '$lib/tauri/TauriLibraryAPI';
 import type { MusicData } from '$lib/features/music/types';
@@ -9,10 +15,11 @@ const HomeService = {
 		recentPlayed: RecentAlbum[];
 		recentlyAdded: RecentAlbum[];
 		genreStats: GenreStat[];
+		genreStatsFromLibrary: boolean;
 		artists: ArtistSummary[];
 		focusMixes: FocusMix[];
 	}> => {
-		const [stats, recentPlayed, recentlyAdded, genreStats, artists, favorites, playedPaths] =
+		const [stats, recentPlayed, recentlyAdded, playGenreStats, artists, favorites, playedPaths] =
 			await Promise.all([
 				TauriStatsAPI.getLibraryStats(),
 				TauriStatsAPI.getRecentPlayed(15),
@@ -23,9 +30,23 @@ const HomeService = {
 				getPlayedPaths()
 			]);
 
+		const totalPlays = playGenreStats.reduce((sum, g) => sum + g.playCount, 0);
+		const genreStatsFromLibrary = playGenreStats.length < 2 || totalPlays < 5;
+		const genreStats = genreStatsFromLibrary
+			? await getLibraryGenreStats(5)
+			: playGenreStats;
+
 		const focusMixes = await buildFocusMixes(recentPlayed, favorites, playedPaths);
 
-		return { stats, recentPlayed, recentlyAdded, genreStats, artists, focusMixes };
+		return {
+			stats,
+			recentPlayed,
+			recentlyAdded,
+			genreStats,
+			genreStatsFromLibrary,
+			artists,
+			focusMixes
+		};
 	},
 
 	playMix: async (mix: FocusMix, shuffle = false) => {
@@ -61,6 +82,43 @@ const HomeService = {
 	}
 };
 
+function normalizeGenreKey(genre: string): string {
+	return genre
+		.toLowerCase()
+		.replace(/[&/]/g, ' ')
+		.replace(/[-_]/g, ' ')
+		.replace(/\s+/g, ' ')
+		.trim();
+}
+
+async function getLibraryGenreStats(limit: number): Promise<GenreStat[]> {
+	const count = await TauriLibraryAPI.getMusicCount({ search: '', sortAsc: true });
+	const map = new Map<string, { display: string; count: number }>();
+	const scanLimit = Math.min(count, 4000);
+
+	for (let i = 0; i < scanLimit; i++) {
+		const track = await TauriLibraryAPI.getMusicByIndex(i, { search: '', sortAsc: true });
+		const raw = track?.genre?.split(/[,;/]/)[0]?.trim();
+		if (!raw) continue;
+		const key = normalizeGenreKey(raw);
+		const existing = map.get(key);
+		if (existing) {
+			existing.count += 1;
+		} else {
+			map.set(key, { display: raw, count: 1 });
+		}
+	}
+
+	return [...map.values()]
+		.sort((a, b) => b.count - a.count)
+		.slice(0, limit)
+		.map(({ display, count: trackCount }) => ({
+			genre: display,
+			playCount: trackCount,
+			listenSeconds: 0
+		}));
+}
+
 async function getPlayedPaths(): Promise<Set<string>> {
 	try {
 		const recent = await TauriStatsAPI.getRecentPlayed(500);
@@ -77,7 +135,6 @@ async function buildFocusMixes(
 ): Promise<FocusMix[]> {
 	const mixes: FocusMix[] = [];
 
-	// Jump Back In
 	if (recentPlayed.length > 0) {
 		const last = recentPlayed[0];
 		const tracks = await getAlbumTracks(last.album);
@@ -93,7 +150,6 @@ async function buildFocusMixes(
 		}
 	}
 
-	// Favorites Focus
 	if (favoritePaths.length >= 3) {
 		mixes.push({
 			id: 'favorites-focus',
@@ -105,31 +161,40 @@ async function buildFocusMixes(
 		});
 	}
 
-	// Genre Discovery - find unplayed tracks in top genres
 	const genreMap = new Map<string, MusicData[]>();
 	const count = await TauriLibraryAPI.getMusicCount({ search: '', sortAsc: true });
-	for (let i = 0; i < Math.min(count, 2000); i++) {
+	for (let i = 0; i < Math.min(count, 3000); i++) {
 		const track = await TauriLibraryAPI.getMusicByIndex(i, { search: '', sortAsc: true });
 		if (!track?.genre) continue;
 		const genre = track.genre.split(/[,;/]/)[0].trim();
 		if (!genre) continue;
-		if (!genreMap.has(genre)) genreMap.set(genre, []);
-		genreMap.get(genre)!.push(track);
+		const key = normalizeGenreKey(genre);
+		if (!genreMap.has(key)) genreMap.set(key, []);
+		genreMap.get(key)!.push(track);
 	}
 
-	for (const [genre, tracks] of genreMap) {
-		const unheard = tracks.filter((t) => !playedPaths.has(t.path));
-		if (unheard.length >= 8) {
-			mixes.push({
-				id: `unheard-${genre.toLowerCase().replace(/\s+/g, '-')}`,
-				title: `Discover ${genre}`,
-				subtitle: `${unheard.length} unheard tracks`,
-				paths: unheard.slice(0, 30).map((t) => t.path),
-				artworkPath: unheard[0].path,
-				prefersShuffle: true
-			});
-			if (mixes.length >= 5) break;
-		}
+	const seenGenreKeys = new Set<string>();
+	const discoverCandidates = [...genreMap.entries()]
+		.map(([key, tracks]) => {
+			const unheard = tracks.filter((t) => !playedPaths.has(t.path));
+			const display = tracks[0]?.genre?.split(/[,;/]/)[0]?.trim() ?? key;
+			return { key, display, unheard };
+		})
+		.filter((c) => c.unheard.length >= 8)
+		.sort((a, b) => b.unheard.length - a.unheard.length);
+
+	for (const { key, display, unheard } of discoverCandidates) {
+		if (seenGenreKeys.has(key)) continue;
+		seenGenreKeys.add(key);
+		mixes.push({
+			id: `unheard-${key.replace(/\s+/g, '-')}`,
+			title: `Discover ${display}`,
+			subtitle: `${unheard.length} unheard tracks`,
+			paths: unheard.slice(0, 30).map((t) => t.path),
+			artworkPath: unheard[0].path,
+			prefersShuffle: true
+		});
+		if (mixes.length >= 5) break;
 	}
 
 	return mixes;

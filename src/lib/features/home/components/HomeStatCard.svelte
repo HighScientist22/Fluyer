@@ -13,20 +13,28 @@
 
 	let { icon, label, value, accent = 'var(--home-accent, rgb(99, 102, 241))', onclick }: Props =
 		$props();
+
+	const displayValue = $derived(
+		typeof value === 'number' && value >= 10000
+			? `${(value / 1000).toFixed(1).replace(/\.0$/, '')}k`
+			: value
+	);
 </script>
 
 <button
-	class="home-stat-card group w-full text-left transition-transform duration-300 hover:scale-[1.02]"
+	class="home-stat-card group min-w-0 w-full text-left transition-transform duration-300 hover:scale-[1.02]"
 	{onclick}
 	disabled={!onclick}
 >
-	<View class="home-glass-panel h-full rounded-xl p-4" glassEnableBlur>
-		<div class="mb-2.5" style="color: {accent}">
-			<div class="h-6 w-6">
+	<View class="home-glass-panel h-full rounded-xl p-3 sm:p-4" glassEnableBlur>
+		<div class="mb-2" style="color: {accent}">
+			<div class="h-5 w-5 sm:h-6 sm:w-6">
 				<Icon type={icon} />
 			</div>
 		</div>
-		<p class="text-opacity-background-70 text-xs">{label}</p>
-		<p class="mt-1 font-light text-[1.75rem] leading-tight tracking-tight">{value}</p>
+		<p class="text-opacity-background-70 text-[11px] sm:text-xs">{label}</p>
+		<p class="mt-0.5 truncate font-light text-xl leading-tight tracking-tight sm:text-2xl">
+			{displayValue}
+		</p>
 	</View>
 </button>

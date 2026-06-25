@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { isMacos } from '$lib/platform';
 	import musicStore from '$lib/stores/music.svelte';
 	import StatsService from '$lib/services/StatsService.svelte';
 	import { IconType } from '$lib/ui/icon/types';
@@ -11,6 +10,8 @@
 	import HomeFocusCard from './HomeFocusCard.svelte';
 	import HomeMediaTile from './HomeMediaTile.svelte';
 	import HomeArtistTile from './HomeArtistTile.svelte';
+	import HomeSectionHeader from './HomeSectionHeader.svelte';
+	import HomeThemeBackground from './HomeThemeBackground.svelte';
 	import TauriLibraryAPI, { CollectionType } from '$lib/tauri/TauriLibraryAPI';
 	import filterStore from '$lib/stores/filter.svelte';
 	import { MusicListType, type AlbumData } from '$lib/features/music/types';
@@ -50,19 +51,34 @@
 	const albumCarousel = $derived(
 		Array.from({ length: Math.min(musicStore.albumCount, 12) }, (_, i) => i)
 	);
+
+	let heroArtwork = $state<string | null>(null);
+
+	$effect(() => {
+		const path = vm.recentPlayed[0]?.path ?? vm.recentlyAdded[0]?.path;
+		if (!path) {
+			heroArtwork = null;
+			return;
+		}
+		(async () => {
+			const music = await TauriLibraryAPI.getMusicByPath(path);
+			heroArtwork = await MetadataService.getMusicCoverArt(music ?? undefined, 512);
+		})();
+	});
 </script>
 
-<div class="home-dashboard scrollbar-hidden h-full overflow-y-auto pb-32">
-	<div class="mx-auto max-w-6xl px-4 py-6 md:px-8 md:py-8">
-		<!-- Greeting -->
-		<header class="mb-8 flex items-start justify-between gap-4">
-			<div>
+<HomeThemeBackground artworkUrl={heroArtwork} />
+
+<div class="home-dashboard scrollbar-hidden relative h-full w-full min-w-0 overflow-y-auto pb-32">
+	<div class="w-full min-w-0 px-4 py-6 sm:px-6 lg:px-8">
+		<header class="mb-6 flex items-start justify-between gap-4">
+			<div class="min-w-0">
 				<h1 class="home-greeting">{vm.greeting}</h1>
 				<p class="text-opacity-background-70 mt-2 text-sm">
 					Your local library — private, offline, and yours.
 				</p>
 			</div>
-			<div class="home-local-badge hidden sm:flex">
+			<div class="home-local-badge hidden shrink-0 sm:flex">
 				<span class="h-2 w-2 rounded-full bg-emerald-400"></span>
 				Local Only
 			</div>
@@ -73,9 +89,8 @@
 				<p class="text-opacity-background-60 animate-pulse text-sm">Loading your library...</p>
 			</div>
 		{:else if vm.stats}
-			<div class="grid gap-8">
-				<!-- Stats row -->
-				<div class="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+			<div class="flex flex-col gap-6">
+				<div class="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
 					<HomeStatCard
 						icon={IconType.MusicListTypeMusic}
 						label="Artists"
@@ -104,12 +119,11 @@
 					/>
 				</div>
 
-				<!-- Focus mixes -->
 				{#if vm.focusMixes.length > 0}
-					<section>
-						<h2 class="home-section-title mb-4">Focus</h2>
-						<div class="home-carousel -mx-1 flex gap-4 overflow-x-auto px-1 pb-1">
-							{#each vm.focusMixes as mix}
+					<section class="min-w-0">
+						<HomeSectionHeader title="Focus" />
+						<div class="home-carousel -mx-1 flex gap-3 overflow-x-auto px-1 pb-1">
+							{#each vm.focusMixes as mix (mix.id)}
 								<HomeFocusCard
 									{mix}
 									accent={vm.accentColor}
@@ -120,23 +134,34 @@
 					</section>
 				{/if}
 
-				<!-- Genre chart -->
-				<HomeGenreChart stats={vm.genreStats} accent={vm.accentColor} />
+				<div class="grid min-w-0 grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-8">
+					<HomeGenreChart
+						stats={vm.genreStats}
+						libraryBased={vm.genreStatsFromLibrary}
+						accent={vm.accentColor}
+					/>
+					<HomeActivityPanel
+						items={vm.activityItems}
+						tab={vm.activityTab}
+						accent={vm.accentColor}
+						ontabchange={(t) => (vm.activityTab = t)}
+						onplay={(album) => vm.playAlbum(album)}
+					/>
+				</div>
 
-				<!-- Recent activity -->
-				<HomeActivityPanel
-					items={vm.activityItems}
-					tab={vm.activityTab}
-					accent={vm.accentColor}
-					ontabchange={(t) => (vm.activityTab = t)}
-					onplay={(album) => vm.playAlbum(album)}
-				/>
-
-				<!-- Album carousel -->
 				{#if albumCarousel.length > 0}
-					<section>
-						<h2 class="home-section-title mb-4">Albums</h2>
-						<div class="home-carousel -mx-1 flex gap-4 overflow-x-auto px-1 pb-1">
+					<section class="min-w-0">
+						<HomeSectionHeader title="Albums">
+							{#snippet actions()}
+								<button
+									class="text-opacity-background-60 text-xs transition-colors hover:text-white"
+									onclick={() => (musicStore.listType = MusicListType.Album)}
+								>
+									See all
+								</button>
+							{/snippet}
+						</HomeSectionHeader>
+						<div class="home-carousel -mx-1 flex gap-3 overflow-x-auto px-1 pb-1">
 							{#each albumCarousel as albumIndex}
 								{#await TauriLibraryAPI.getAlbumFirstByIndex(albumIndex, '', true) then music}
 									{#if music}
@@ -159,12 +184,11 @@
 					</section>
 				{/if}
 
-				<!-- Artist carousel -->
 				{#if vm.artists.length > 0}
-					<section>
-						<h2 class="home-section-title mb-4">Artists</h2>
-						<div class="home-carousel -mx-1 flex gap-4 overflow-x-auto px-1 pb-1">
-							{#each vm.artists as artist}
+					<section class="min-w-0">
+						<HomeSectionHeader title="Artists" />
+						<div class="home-carousel -mx-1 flex gap-3 overflow-x-auto px-1 pb-1">
+							{#each vm.artists as artist (artist.name)}
 								<HomeArtistTile
 									{artist}
 									accent={vm.accentColor}
@@ -181,29 +205,13 @@
 
 <style lang="scss">
 	.home-greeting {
-		font-family: Georgia, 'Times New Roman', serif;
 		font-size: clamp(1.75rem, 4vw, 2.5rem);
 		font-weight: 400;
 		letter-spacing: -0.02em;
 		line-height: 1.15;
 	}
 
-	.home-section-title {
-		font-family: Georgia, 'Times New Roman', serif;
-		font-size: 1.5rem;
-		font-weight: 400;
-		letter-spacing: -0.01em;
-	}
-
 	.home-local-badge {
-		align-items: center;
-		gap: 0.5rem;
-		padding: 0.375rem 0.75rem;
-		border-radius: 9999px;
-		font-size: 0.75rem;
-		font-weight: 500;
-		background: rgba(16, 185, 129, 0.15);
-		border: 1px solid rgba(16, 185, 129, 0.3);
 		color: rgb(167, 243, 208);
 	}
 
@@ -212,10 +220,6 @@
 		&::-webkit-scrollbar {
 			display: none;
 		}
-	}
-
-	:global(.home-glass-panel) {
-		border: 1px solid rgba(255, 255, 255, 0.1);
 	}
 
 	:global(.home-stat-card:disabled) {

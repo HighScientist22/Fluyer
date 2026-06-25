@@ -1,5 +1,6 @@
 import { Store } from '@tauri-apps/plugin-store';
 import { SettingAnimatedBackgroundType } from '$lib/features/settings/animated_background/types';
+import { AppTheme, LiquidGlassMode } from '$lib/features/settings/appearance/types';
 import { IconThemeType } from '$lib/ui/icon/types';
 import musicStore from '$lib/stores/music.svelte';
 import settingStore from '$lib/stores/setting.svelte';
@@ -40,7 +41,9 @@ const PersistentStoreService = {
 			PersistentStoreService.swipeGuide.initialize(),
 			PersistentStoreService.equalizer.initialize(),
 			PersistentStoreService.bitPerfectMode.initialize(),
-			PersistentStoreService.volume.initialize()
+			PersistentStoreService.volume.initialize(),
+			PersistentStoreService.appearance.appTheme.initialize(),
+			PersistentStoreService.appearance.liquidGlassMode.initialize()
 		]);
 	},
 
@@ -88,6 +91,19 @@ const PersistentStoreService = {
 	),
 
 	swipeGuide: makeBinding('swipe-guide', true, (value) => (mobileStore.showSwipeGuide = value)),
+
+	appearance: {
+		appTheme: makeBinding<AppTheme>(
+			'appearance-app-theme',
+			AppTheme.Dark,
+			(value) => (settingStore.appearance.appTheme = value)
+		),
+		liquidGlassMode: makeBinding<LiquidGlassMode>(
+			'appearance-liquid-glass-mode',
+			LiquidGlassMode.Tinted,
+			(value) => (settingStore.appearance.liquidGlassMode = value)
+		)
+	},
 
 	userInterface: {
 		showRepeatButton: makeBinding(

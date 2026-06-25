@@ -17,15 +17,14 @@ export function useHomeDashboard() {
 	let recentPlayed = $state<RecentAlbum[]>([]);
 	let recentlyAdded = $state<RecentAlbum[]>([]);
 	let genreStats = $state<GenreStat[]>([]);
+	let genreStatsFromLibrary = $state(false);
 	let artists = $state<ArtistSummary[]>([]);
 	let focusMixes = $state<FocusMix[]>([]);
 	let activityTab = $state<RecentActivityTab>('played');
 	let greeting = $state('Welcome back');
 	let accentColor = $state('rgb(99, 102, 241)');
 
-	const activityItems = $derived(
-		activityTab === 'played' ? recentPlayed : recentlyAdded
-	);
+	const activityItems = $derived(activityTab === 'played' ? recentPlayed : recentlyAdded);
 
 	async function load() {
 		isLoading = true;
@@ -35,6 +34,7 @@ export function useHomeDashboard() {
 			recentPlayed = data.recentPlayed;
 			recentlyAdded = data.recentlyAdded;
 			genreStats = data.genreStats;
+			genreStatsFromLibrary = data.genreStatsFromLibrary;
 			artists = data.artists;
 			focusMixes = data.focusMixes;
 
@@ -77,6 +77,9 @@ export function useHomeDashboard() {
 		},
 		get genreStats() {
 			return genreStats;
+		},
+		get genreStatsFromLibrary() {
+			return genreStatsFromLibrary;
 		},
 		get artists() {
 			return artists;
