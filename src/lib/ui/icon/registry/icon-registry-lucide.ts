@@ -27,6 +27,7 @@ import ChartNoAxesColumn from '@lucide/svelte/icons/chart-no-axes-column';
 import Folder from '@lucide/svelte/icons/folder';
 import ArrowDownWideNarrow from '@lucide/svelte/icons/arrow-down-wide-narrow';
 import ArrowUpNarrowWide from '@lucide/svelte/icons/arrow-up-narrow-wide';
+import House from '@lucide/svelte/icons/house';
 import Grid2x2Icon from '@lucide/svelte/icons/grid-2x2';
 import DiscAlbum from '@lucide/svelte/icons/disc-album';
 import ListMusic from '@lucide/svelte/icons/list-music';
@@ -70,6 +71,7 @@ const iconRegistryLucide = {
 	[IconType.Folder]: Folder,
 	[IconType.SortAsc]: ArrowUpNarrowWide,
 	[IconType.SortDesc]: ArrowDownWideNarrow,
+	[IconType.MusicListTypeHome]: House,
 	[IconType.MusicListTypeAll]: Grid2x2Icon,
 	[IconType.MusicListTypeAlbum]: DiscAlbum,
 	[IconType.MusicListTypeMusic]: Music2,

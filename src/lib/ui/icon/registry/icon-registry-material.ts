@@ -28,6 +28,7 @@ import Folder from 'svelte-material-icons/Folder.svelte';
 import SortAscending from 'svelte-material-icons/SortAscending.svelte';
 import SortDescending from 'svelte-material-icons/SortDescending.svelte';
 import GridLarge from 'svelte-material-icons/GridLarge.svelte';
+import HomeOutline from 'svelte-material-icons/HomeOutline.svelte';
 import Album from 'svelte-material-icons/Album.svelte';
 import PlaylistMusicOutline from 'svelte-material-icons/PlaylistMusicOutline.svelte';
 import Check from 'svelte-material-icons/Check.svelte';
@@ -70,6 +71,7 @@ const iconRegistryMaterial = {
 	[IconType.Folder]: Folder,
 	[IconType.SortAsc]: SortAscending,
 	[IconType.SortDesc]: SortDescending,
+	[IconType.MusicListTypeHome]: HomeOutline,
 	[IconType.MusicListTypeAll]: GridLarge,
 	[IconType.MusicListTypeAlbum]: Album,
 	[IconType.MusicListTypeMusic]: MusicNote,

@@ -10,6 +10,7 @@ import FileTextIcon from 'phosphor-svelte/lib/FileTextIcon';
 import FolderIcon from 'phosphor-svelte/lib/FolderIcon';
 import FrameCornersIcon from 'phosphor-svelte/lib/FrameCornersIcon';
 import GearIcon from 'phosphor-svelte/lib/GearIcon';
+import HouseIcon from 'phosphor-svelte/lib/HouseIcon';
 import GridFourIcon from 'phosphor-svelte/lib/GridFourIcon';
 import LockSimpleIcon from 'phosphor-svelte/lib/LockSimpleIcon';
 import MagnifyingGlassIcon from 'phosphor-svelte/lib/MagnifyingGlassIcon';
@@ -70,6 +71,7 @@ const iconRegistryPhospor = {
 	[IconType.Folder]: FolderIcon,
 	[IconType.SortAsc]: SortAscendingIcon,
 	[IconType.SortDesc]: SortDescendingIcon,
+	[IconType.MusicListTypeHome]: HouseIcon,
 	[IconType.MusicListTypeAll]: GridFourIcon,
 	[IconType.MusicListTypeAlbum]: VinylRecordIcon,
 	[IconType.MusicListTypeMusic]: MusicNoteIcon,

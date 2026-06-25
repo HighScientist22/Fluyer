@@ -76,5 +76,24 @@ pub const MIGRATIONS_SLICE: &[M<'_>] = &[
     );
     ",
     ),
+    M::up(
+        "
+    CREATE TABLE play_history (
+        id INTEGER PRIMARY KEY,
+        path TEXT NOT NULL,
+        played_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        duration_seconds REAL NOT NULL DEFAULT 0
+    );
+
+    CREATE INDEX idx_play_history_played_at ON play_history(played_at DESC);
+    CREATE INDEX idx_play_history_path ON play_history(path);
+
+    CREATE TABLE favorites (
+        id INTEGER PRIMARY KEY,
+        path TEXT NOT NULL UNIQUE,
+        created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+    ",
+    ),
 ];
 pub const DATABASE_MIGRATIONS: Migrations<'_> = Migrations::from_slice(MIGRATIONS_SLICE);

@@ -2,7 +2,7 @@
 	import 'animate.css';
 	import AnimatedBackground from '$lib/features/animated_background/components/AnimatedBackground.svelte';
 	import '../app.scss';
-	import { isDesktop, isLinux } from '$lib/platform';
+	import { isDesktop, isLinux, isMacos } from '$lib/platform';
 	import { getCurrentWindow } from '@tauri-apps/api/window';
 	import { onMount } from 'svelte';
 	import { PageRoutes } from '$lib/constants/PageRoutes';
@@ -21,11 +21,16 @@
 	import MetadataService from '$lib/services/MetadataService.svelte';
 	import ToastContainer from '$lib/ui/toast/ToastContainer.svelte';
 	import CreatePlaylistModal from '$lib/features/playlist/components/CreatePlaylistModal.svelte';
+	import StatsService from '$lib/services/StatsService.svelte';
 	import PlaylistService from '$lib/services/PlaylistService.svelte';
 	import UpdateService from '$lib/services/UpdateService.svelte';
 
 	if (isLinux()) {
 		import('$lib/scss/linux.scss');
+	}
+
+	if (isMacos()) {
+		import('$lib/scss/macos.scss');
 	}
 
 	interface Props {
@@ -46,7 +51,8 @@
 			MobileService.initialize(),
 			FolderService.initialize(),
 			MetadataService.initialize(),
-			PlaylistService.initialize()
+			PlaylistService.initialize(),
+			StatsService.initialize()
 		]);
 
 		if (isDesktop()) {

@@ -14,6 +14,7 @@ mod music;
 mod playlist;
 pub mod renderer;
 mod sidebar;
+mod stats;
 mod system;
 mod utils;
 mod wgpu_renderer;

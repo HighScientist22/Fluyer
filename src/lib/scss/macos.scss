@@ -1,0 +1,22 @@
+// macOS Tahoe 27+ refinements — liquid glass home dashboard styling
+@import 'lib/scss/scrollbar';
+
+.home-dashboard {
+	-webkit-font-smoothing: antialiased;
+}
+
+:global(.home-glass-panel) {
+	backdrop-filter: blur(20px) saturate(1.4);
+	-webkit-backdrop-filter: blur(20px) saturate(1.4);
+	background: rgba(255, 255, 255, 0.06);
+}
+
+:global(.home-stat-card:not(:disabled):hover .home-glass-panel) {
+	background: rgba(255, 255, 255, 0.1);
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+.home-greeting,
+.home-section-title {
+	font-family: 'New York', 'Georgia', 'Iowan Old Style', 'Palatino Linotype', serif;
+}

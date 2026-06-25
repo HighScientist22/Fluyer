@@ -43,6 +43,7 @@ export enum RepeatMode {
 }
 
 export enum MusicListType {
+	Home = 'home',
 	All = 'all',
 	Folder = 'folder',
 	Album = 'album',

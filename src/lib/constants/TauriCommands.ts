@@ -72,5 +72,16 @@ export const TauriCommands = {
 	DEVELOPER_LOG_SAVE: 'developer_log_save',
 	DEVELOPER_MPV_LOG_SAVE: 'developer_mpv_log_save',
 
-	UPDATE_CHECK: 'update_check'
+	UPDATE_CHECK: 'update_check',
+
+	// Stats & favorites
+	STATS_RECORD_PLAY: 'stats_record_play',
+	STATS_LIBRARY_GET: 'stats_library_get',
+	STATS_RECENT_PLAYED_GET: 'stats_recent_played_get',
+	STATS_RECENTLY_ADDED_GET: 'stats_recently_added_get',
+	STATS_GENRE_GET: 'stats_genre_get',
+	STATS_ARTISTS_GET: 'stats_artists_get',
+	FAVORITES_TOGGLE: 'favorites_toggle',
+	FAVORITES_IS: 'favorites_is',
+	FAVORITES_ALL_GET: 'favorites_all_get'
 };

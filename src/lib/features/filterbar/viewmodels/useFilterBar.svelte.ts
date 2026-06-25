@@ -31,6 +31,7 @@ const RESPONSIVE_RULES = [
 ];
 
 const tracksOptions = [
+	{ value: MusicListType.Home, icon: IconType.MusicListTypeHome, label: 'Home' },
 	{ value: MusicListType.All, icon: IconType.MusicListTypeAll, label: 'All' },
 	{ value: MusicListType.Album, icon: IconType.MusicListTypeAlbum, label: 'Album' },
 	{ value: MusicListType.Music, icon: IconType.MusicListTypeMusic, label: 'Music' },

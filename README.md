@@ -60,6 +60,20 @@ makepkg -si
 
 ---
 
+## 🏠 Local-First Music Player
+
+Fluyer is built for audiophiles who want a **local-only** music experience:
+
+- **Roon-inspired home dashboard** — stats, focus mixes, recent activity, genre charts, and album/artist carousels
+- **Private by design** — your library stays on your machine; no accounts, no telemetry, no streaming
+- **Listening stats** — track play history, favorites, and discovery mixes from your own collection
+- **Dynamic theming** — accent colors extracted from album artwork
+- **Gapless playback, lyrics, visualizers, playlists** — everything you need without the cloud
+
+Inspired by [Aries](https://github.com/HighScientist22/aries) — a native macOS music player with Roon-style design.
+
+---
+
 ## 🐞 Known Issues
 
 ### macOS
@@ -73,13 +87,15 @@ makepkg -si
 2. Select **Open**
 3. Confirm again in the dialog
 
-#### macOS 15 (Sequoia) and above:
+#### macOS 15 (Sequoia) through macOS 27 (Tahoe):
 
 1. Open the app — it will be blocked
 2. Go to `System Settings > Privacy & Security`
 3. Scroll down and click **Open Anyway**
 4. Confirm and authenticate
 5. Open again from **Applications**
+
+> Fluyer is optimized for **macOS 27 Tahoe** with liquid glass UI, Roon-inspired home dashboard, and native traffic light integration.
 
 ---
 

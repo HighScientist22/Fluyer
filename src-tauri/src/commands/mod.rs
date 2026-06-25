@@ -85,4 +85,14 @@ pub const COMMAND_HANDLERS: fn(tauri::ipc::Invoke) -> bool = tauri::generate_han
     crate::playlist::commands::playlist_delete,
     crate::playlist::commands::playlist_image_upload,
     crate::playlist::commands::playlist_image_read,
+    // Stats & favorites
+    crate::stats::commands::stats_record_play,
+    crate::stats::commands::stats_library_get,
+    crate::stats::commands::stats_recent_played_get,
+    crate::stats::commands::stats_recently_added_get,
+    crate::stats::commands::stats_genre_get,
+    crate::stats::commands::stats_artists_get,
+    crate::stats::commands::favorites_toggle,
+    crate::stats::commands::favorites_is,
+    crate::stats::commands::favorites_all_get,
 ];

@@ -11,11 +11,15 @@
 	import MusicList from '$lib/features/music/components/MusicList.svelte';
 	import Menu from '$lib/features/menu/components/Menu.svelte';
 	import PlayerBar from '$lib/features/playerbar/components/PlayerBar.svelte';
+	import HomeDashboard from '$lib/features/home/components/HomeDashboard.svelte';
 	import modalStore from '$lib/stores/modal.svelte';
 
 	let paddingTop = $derived((isMobile() ? mobileStore.statusBarHeight : 0) + filterBarStore.height);
 
 	let gridClass = $derived.by(() => {
+		if (musicStore.listType === MusicListType.Home) {
+			return 'grid-rows-[auto_min-content]';
+		}
 		switch (musicStore.listType) {
 			case MusicListType.All:
 				return 'grid-rows-[min-content_min-content_auto_min-content]';
@@ -46,14 +50,18 @@
 	 			{modalStore.show ? 'opacity-10 blur-sm' : ''} transition-opacity duration-300"
 		style="padding-top: {paddingTop}px;"
 	>
-		{#if [MusicListType.All, MusicListType.Album, MusicListType.Playlist].includes(musicStore.listType)}
-			<AlbumList />
-		{/if}
-		{#if [MusicListType.All, MusicListType.Folder, MusicListType.Playlist].includes(musicStore.listType)}
-			<CollectionInfo />
-		{/if}
-		{#if [MusicListType.All, MusicListType.Music, MusicListType.Folder, MusicListType.Playlist].includes(musicStore.listType)}
-			<MusicList {tooltipVisible} />
+		{#if musicStore.listType === MusicListType.Home}
+			<HomeDashboard />
+		{:else}
+			{#if [MusicListType.All, MusicListType.Album, MusicListType.Playlist].includes(musicStore.listType)}
+				<AlbumList />
+			{/if}
+			{#if [MusicListType.All, MusicListType.Folder, MusicListType.Playlist].includes(musicStore.listType)}
+				<CollectionInfo />
+			{/if}
+			{#if [MusicListType.All, MusicListType.Music, MusicListType.Folder, MusicListType.Playlist].includes(musicStore.listType)}
+				<MusicList {tooltipVisible} />
+			{/if}
 		{/if}
 		<PlayerBar bind:tooltipVisible />
 	</div>
