@@ -4,6 +4,7 @@
 	import SettingMusicPaths from '$lib/features/settings/music_paths/SettingMusicPaths.svelte';
 	import { isMobile } from '$lib/platform';
 	import SettingAnimatedBackground from '$lib/features/settings/animated_background/SettingAnimatedBackground.svelte';
+	import SettingAppearance from '$lib/features/settings/appearance/SettingAppearance.svelte';
 	import SettingUserInteface from '$lib/features/settings/user_interface/SettingUserInterface.svelte';
 	import SettingDeveloper from '$lib/features/settings/developer/SettingDeveloper.svelte';
 	import SettingIconTheme from '$lib/features/settings/icon_theme/SettingIconTheme.svelte';
@@ -48,6 +49,7 @@
 			<div class="scrollbar-hidden mb-3 w-full overflow-auto">
 				<!-- <SettingMusicPlayerConfiguration /> -->
 				<SettingMusicPaths />
+				<SettingAppearance />
 				<SettingAnimatedBackground />
 				<SettingIconTheme />
 				<SettingUserInteface />

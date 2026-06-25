@@ -14,8 +14,16 @@
 	import ConfirmCancelButtons from './ConfirmCancelButtons.svelte';
 	import ListModeSelector from './ListModeSelector.svelte';
 	import AddPlaylistButton from './AddPlaylistButton.svelte';
+	import shortcutStore from '$lib/stores/shortcut.svelte';
+	import PlaylistService from '$lib/services/PlaylistService.svelte';
 
 	const vm = useFilterBar();
+	let searchInput = $state<HTMLInputElement>();
+
+	$effect(() => {
+		shortcutStore.focusSearch;
+		searchInput?.focus();
+	});
 </script>
 
 <svelte:window onresize={vm.updateSize} />
@@ -35,8 +43,20 @@
 		{isWindows() || isLinux() ? 'me-[100px] sm:me-0' : ''}
 		{isMobile()
 			? 'grid-cols-[min-content_1fr_min-content_min-content] sm:grid-cols-[min-content_min-content_1fr]'
-			: 'grid-cols-[1fr_min-content_min-content] sm:grid-cols-[min-content_1fr]'}"
+			: 'grid-cols-[min-content_min-content_1fr] sm:grid-cols-[min-content_min-content_1fr]'}"
 	>
+		{#if !isMobile()}
+			<Button
+				class="pointer-events-auto grid aspect-square h-9 justify-center rounded"
+				onclick={vm.handleMenuButton}
+				title="Menu"
+			>
+				<div class="w-5">
+					<Icon type={IconType.Menu} />
+				</div>
+			</Button>
+		{/if}
+
 		{#if isMobile()}
 			<Button
 				class="pointer-events-auto grid aspect-square h-9 justify-center rounded sm:p-0"
@@ -53,6 +73,7 @@
 			icon={IconType.Search}
 			placeholder="Search..."
 			bind:value={filterStore.search}
+			bind:inputElement={searchInput}
 		/>
 
 		<Button
@@ -94,6 +115,15 @@
 				/>
 				{#if musicStore.listType === 'playlist' && vm.state.columns < 5}
 					<AddPlaylistButton onclick={vm.startPlaylistCreation} />
+					<Button
+						class="pointer-events-auto grid aspect-square h-9 shrink-0 items-center justify-center rounded"
+						onclick={() => PlaylistService.showSmartPlaylistModal()}
+						title="Create smart playlist"
+					>
+						<div class="w-5">
+							<Icon type={IconType.Sparkle} />
+						</div>
+					</Button>
 				{/if}
 			{/if}
 		</div>
@@ -115,6 +145,15 @@
 				/>
 				{#if musicStore.listType === 'playlist'}
 					<AddPlaylistButton onclick={vm.startPlaylistCreation} />
+					<Button
+						class="pointer-events-auto grid aspect-square h-9 shrink-0 items-center justify-center rounded"
+						onclick={() => PlaylistService.showSmartPlaylistModal()}
+						title="Create smart playlist"
+					>
+						<div class="w-5">
+							<Icon type={IconType.Sparkle} />
+						</div>
+					</Button>
 				{/if}
 			{/if}
 		</div>
@@ -127,6 +166,15 @@
 			/>
 		{:else if musicStore.listType === 'playlist' && vm.state.columns >= 5}
 			<AddPlaylistButton onclick={vm.startPlaylistCreation} />
+			<Button
+				class="pointer-events-auto grid aspect-square h-9 shrink-0 items-center justify-center rounded"
+				onclick={() => PlaylistService.showSmartPlaylistModal()}
+				title="Create smart playlist"
+			>
+				<div class="w-5">
+					<Icon type={IconType.Sparkle} />
+				</div>
+			</Button>
 		{/if}
 	</div>
 	<div
@@ -140,7 +188,18 @@
 			icon={IconType.Search}
 			placeholder="Search..."
 			bind:value={filterStore.search}
+			bind:inputElement={searchInput}
 		/>
+
+		<Button
+			class="pointer-events-auto grid aspect-square h-9 justify-center rounded"
+			onclick={vm.handleSettingsButton}
+			title="Settings"
+		>
+			<div class="w-5">
+				<Icon type={IconType.Settings} />
+			</div>
+		</Button>
 
 		{#if isMobile()}
 			<Button

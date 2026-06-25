@@ -10,6 +10,7 @@ import FileTextIcon from 'phosphor-svelte/lib/FileTextIcon';
 import FolderIcon from 'phosphor-svelte/lib/FolderIcon';
 import FrameCornersIcon from 'phosphor-svelte/lib/FrameCornersIcon';
 import GearIcon from 'phosphor-svelte/lib/GearIcon';
+import HouseIcon from 'phosphor-svelte/lib/HouseIcon';
 import GridFourIcon from 'phosphor-svelte/lib/GridFourIcon';
 import LockSimpleIcon from 'phosphor-svelte/lib/LockSimpleIcon';
 import MagnifyingGlassIcon from 'phosphor-svelte/lib/MagnifyingGlassIcon';
@@ -34,6 +35,9 @@ import PlusIcon from 'phosphor-svelte/lib/PlusIcon';
 import CheckIcon from 'phosphor-svelte/lib/CheckIcon';
 import XIcon from 'phosphor-svelte/lib/XIcon';
 import ImageIcon from 'phosphor-svelte/lib/ImageIcon';
+import HeartIcon from 'phosphor-svelte/lib/HeartIcon';
+import SparkleIcon from 'phosphor-svelte/lib/SparkleIcon';
+import KeyboardIcon from 'phosphor-svelte/lib/KeyboardIcon';
 import ListIcon from 'phosphor-svelte/lib/ListIcon';
 
 const iconRegistryPhospor = {
@@ -70,6 +74,7 @@ const iconRegistryPhospor = {
 	[IconType.Folder]: FolderIcon,
 	[IconType.SortAsc]: SortAscendingIcon,
 	[IconType.SortDesc]: SortDescendingIcon,
+	[IconType.MusicListTypeHome]: HouseIcon,
 	[IconType.MusicListTypeAll]: GridFourIcon,
 	[IconType.MusicListTypeAlbum]: VinylRecordIcon,
 	[IconType.MusicListTypeMusic]: MusicNoteIcon,
@@ -80,7 +85,10 @@ const iconRegistryPhospor = {
 	[IconType.Cancel]: XIcon,
 	[IconType.Image]: ImageIcon,
 	[IconType.Menu]: ListIcon,
-	[IconType.Queue]: QueueIcon
+	[IconType.Queue]: QueueIcon,
+	[IconType.Heart]: HeartIcon,
+	[IconType.Sparkle]: SparkleIcon,
+	[IconType.Keyboard]: KeyboardIcon
 };
 
 export default iconRegistryPhospor;

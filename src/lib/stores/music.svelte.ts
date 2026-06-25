@@ -5,7 +5,7 @@ const musicStore = $state({
 	// Library counts (actual data lives in Rust LibraryState)
 	listCount: 0,
 	albumCount: 0,
-	listType: MusicListType.All,
+	listType: MusicListType.Home,
 	// null = still loading, false = paths is empty, true = loaded with data
 	isLibraryLoaded: null as boolean | null,
 

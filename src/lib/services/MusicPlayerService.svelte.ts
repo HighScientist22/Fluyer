@@ -1,6 +1,7 @@
 import musicStore from '$lib/stores/music.svelte';
 import ProgressService from '$lib/services/ProgressService.svelte';
 import TauriMusicAPI from '$lib/tauri/TauriMusicAPI';
+import StatsService from '$lib/services/StatsService.svelte';
 import TauriLibraryAPI from '$lib/tauri/TauriLibraryAPI';
 import QueueService from '$lib/services/QueueService.svelte';
 import { RepeatMode } from '$lib/features/music/types';
@@ -86,6 +87,13 @@ const MusicPlayerService = {
 				const musicData = await TauriLibraryAPI.getQueueByIndex(e.payload.index);
 				if (musicData) {
 					musicStore.currentMusic = musicData;
+					if (e.payload.isPlaying) {
+						StatsService.resetPlayTracking();
+						await StatsService.recordPlay(
+							musicData.path,
+							(musicData.duration ?? 0) / 1000
+						);
+					}
 				}
 				if (musicStore.currentMusic) {
 					musicStore.progressValue =

@@ -72,5 +72,26 @@ export const TauriCommands = {
 	DEVELOPER_LOG_SAVE: 'developer_log_save',
 	DEVELOPER_MPV_LOG_SAVE: 'developer_mpv_log_save',
 
-	UPDATE_CHECK: 'update_check'
+	UPDATE_CHECK: 'update_check',
+
+	// Stats & favorites
+	STATS_RECORD_PLAY: 'stats_record_play',
+	STATS_LIBRARY_GET: 'stats_library_get',
+	STATS_RECENT_PLAYED_GET: 'stats_recent_played_get',
+	STATS_RECENTLY_ADDED_GET: 'stats_recently_added_get',
+	STATS_GENRE_GET: 'stats_genre_get',
+	STATS_LIBRARY_GENRES_GET: 'stats_library_genres_get',
+	STATS_ALBUM_PATHS_GET: 'stats_album_paths_get',
+	STATS_DISCOVER_MIXES_GET: 'stats_discover_mixes_get',
+	STATS_ARTISTS_GET: 'stats_artists_get',
+	FAVORITES_TOGGLE: 'favorites_toggle',
+	FAVORITES_IS: 'favorites_is',
+	FAVORITES_ALL_GET: 'favorites_all_get',
+
+	// Smart playlists
+	SMART_PLAYLIST_ALL_GET: 'smart_playlist_all_get',
+	SMART_PLAYLIST_CREATE: 'smart_playlist_create',
+	SMART_PLAYLIST_DELETE: 'smart_playlist_delete',
+	SMART_PLAYLIST_RESOLVE_PRESET: 'smart_playlist_resolve_preset',
+	SMART_PLAYLIST_RESOLVE_RULE: 'smart_playlist_resolve_rule'
 };

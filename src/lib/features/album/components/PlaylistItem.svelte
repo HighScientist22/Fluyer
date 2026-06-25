@@ -52,6 +52,9 @@
 	<p
 		class="text-opacity-background-80 animate-scroll-overflow-text overflow-hidden whitespace-nowrap text-[15px] md:text-base"
 	>
+		{#if playlist.isSmart}
+			<span class="text-opacity-background-60">✦ </span>
+		{/if}
 		{playlist.artist || `${playlist.paths.length} Tracks`}
 	</p>
 </div>

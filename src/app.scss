@@ -6,6 +6,12 @@
 @import 'lib/scss/text-opacity-background';
 @import 'lib/scss/show-then-fade';
 @import 'lib/scss/components';
+@import 'lib/scss/liquid-glass';
+
+html,
+body {
+	background-color: #0b0b12;
+}
 
 * {
 	-webkit-user-select: none;

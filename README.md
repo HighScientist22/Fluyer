@@ -60,6 +60,84 @@ makepkg -si
 
 ---
 
+## 🏠 Local-First Music Player
+
+Fluyer is built for audiophiles who want a **local-only** music experience:
+
+- **Roon-inspired home dashboard** — stats, focus mixes, recent activity, genre charts, and album/artist carousels
+- **Private by design** — your library stays on your machine; no accounts, no telemetry, no streaming
+- **Listening stats** — track play history, favorites, and discovery mixes from your own collection
+- **Dynamic theming** — accent colors extracted from album artwork
+- **Gapless playback, lyrics, visualizers, playlists** — everything you need without the cloud
+
+Inspired by [Aries](https://github.com/HighScientist22/aries) — a native macOS music player with Roon-style design.
+
+---
+
+## 🛠 Development
+
+### Prerequisites
+
+| Tool | Version | Notes |
+|------|---------|-------|
+| [Bun](https://bun.sh) | latest | Package manager & scripts |
+| [Rust](https://rustup.rs) | stable | Tauri backend |
+| [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/) | — | Platform-specific deps |
+
+**macOS (recommended for Tahoe 27):**
+```bash
+xcode-select --install
+# Install Bun
+curl -fsSL https://bun.sh/install | bash
+# Install Rust
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+**Windows:** Install [Visual Studio Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) with C++ workload, plus [WebView2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/).
+
+**Linux (Ubuntu/Debian):**
+```bash
+sudo apt update
+sudo apt install -y libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev \
+  libssl-dev libayatana-appindicator3-dev librsvg2-dev patchelf
+```
+
+### Clone & run
+
+```bash
+git clone https://github.com/HighScientist22/Fluyer.git
+cd Fluyer
+git checkout cursor/roon-home-dashboard-f5a8   # latest feature branch
+
+cp .env.example .env
+bun install
+bun run init          # downloads BASS + FFmpeg native libs
+bun run tauri dev     # launches the app in dev mode
+```
+
+### Useful commands
+
+```bash
+bun run tauri dev      # Dev mode with hot reload
+bun run tauri build    # Production build (.app / .exe / .deb)
+bun run check          # TypeScript + Svelte type check
+bun run lint           # ESLint
+bun run format         # Prettier + rustfmt
+```
+
+### Keyboard shortcuts (in-app)
+
+| Shortcut | Action |
+|----------|--------|
+| `⌘/Ctrl H` | Go to Home dashboard |
+| `⌘/Ctrl K` | Focus search |
+| `Space` | Play / Pause |
+| `⌘/Ctrl ←` | Previous track |
+| `⌘/Ctrl →` | Next track |
+| `⌘/Ctrl /` | Show shortcuts |
+
+---
+
 ## 🐞 Known Issues
 
 ### macOS
@@ -73,13 +151,15 @@ makepkg -si
 2. Select **Open**
 3. Confirm again in the dialog
 
-#### macOS 15 (Sequoia) and above:
+#### macOS 15 (Sequoia) through macOS 27 (Tahoe):
 
 1. Open the app — it will be blocked
 2. Go to `System Settings > Privacy & Security`
 3. Scroll down and click **Open Anyway**
 4. Confirm and authenticate
 5. Open again from **Applications**
+
+> Fluyer is optimized for **macOS 27 Tahoe** with liquid glass UI, Roon-inspired home dashboard, and native traffic light integration.
 
 ---
 

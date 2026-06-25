@@ -39,6 +39,7 @@ export enum IconType {
 	Folder,
 	SortAsc,
 	SortDesc,
+	MusicListTypeHome,
 	MusicListTypeAll,
 	MusicListTypeAlbum,
 	MusicListTypeMusic,
@@ -49,5 +50,8 @@ export enum IconType {
 	Cancel,
 	Image,
 	Menu,
-	Queue
+	Queue,
+	Heart,
+	Sparkle,
+	Keyboard
 }

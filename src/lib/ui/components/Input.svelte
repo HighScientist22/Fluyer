@@ -8,12 +8,12 @@
 		value?: string;
 		placeholder?: string;
 		icon?: IconType;
+		inputElement?: HTMLInputElement;
 	}
 
-	let { value = $bindable(), icon, ...props }: Props = $props();
+	let { value = $bindable(), icon, inputElement = $bindable(), ...props }: Props = $props();
 
 	let isPressed = $state(false);
-	let inputElement: HTMLInputElement;
 
 	const handleClick = (event: MouseEvent & { currentTarget: EventTarget & HTMLDivElement }) => {
 		isPressed = true;

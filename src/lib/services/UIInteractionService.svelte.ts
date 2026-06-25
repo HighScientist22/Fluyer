@@ -1,55 +1,73 @@
 // @ts-ignore
 import musicStore from '$lib/stores/music.svelte';
+import { MusicListType } from '$lib/features/music/types';
 import MusicPlayerService from '$lib/services/MusicPlayerService.svelte';
+import shortcutStore from '$lib/stores/shortcut.svelte';
+import { Modal } from '$lib/constants/Modal';
+import ModalService from '$lib/services/ModalService.svelte';
+import filterStore from '$lib/stores/filter.svelte';
+import PageService from '$lib/services/PageService.svelte';
+import { PageRoutes } from '$lib/constants/PageRoutes';
+
+function isTypingTarget(target: Element) {
+	return target.matches('input, textarea, select, [contenteditable="true"]');
+}
+
+function isMeta(e: KeyboardEvent) {
+	return e.metaKey || e.ctrlKey;
+}
 
 const UIInteractionService = {
 	initialize: async () => {
 		UIInteractionService.autoScrollOverflowText();
 		UIInteractionService.handleKeyControls();
 	},
-	// FIXME: Auto scroll overflow eating CPU
-	autoScrollOverflowText: () => {
-		// const scrollDuration = 3000;
-		// let scrollEnd = true;
-		// setInterval(() => {
-		// 	let elements = document.querySelectorAll('.animate-scroll-overflow-text');
-		// 	elements.forEach(el => {
-		// 		const htmlEl = el as HTMLElement;
-		// 		// Wrap contents in a span if not already wrapped
-		// 		if (!htmlEl.hasAttribute('data-scroll-wrapped')) {
-		// 			const span = document.createElement('span');
-		// 			span.style.display = 'inline-block';
-		// 			span.style.transition = `transform ${scrollDuration}ms linear`;
-		// 			// Move all child nodes (including Svelte's reactive text nodes) into the span
-		// 			while (htmlEl.firstChild) {
-		// 				span.appendChild(htmlEl.firstChild);
-		// 			}
-		// 			htmlEl.appendChild(span);
-		// 			htmlEl.setAttribute('data-scroll-wrapped', 'true');
-		// 		}
-		// 		const span = htmlEl.firstChild as HTMLElement;
-		// 		if (!span) return;
-		// 		// Calculate overflow
-		// 		const overflow = span.scrollWidth - htmlEl.clientWidth;
-		// 		if (overflow > 0) {
-		// 			if (scrollEnd) {
-		// 				span.style.transform = `translateX(-${overflow}px)`;
-		// 			} else {
-		// 				span.style.transform = `translateX(0px)`;
-		// 			}
-		// 		} else {
-		// 			// Reset if no longer overflowing
-		// 			span.style.transform = `translateX(0px)`;
-		// 		}
-		// 	});
-		// 	scrollEnd = !scrollEnd;
-		// }, scrollDuration + 2000);
-	},
+	autoScrollOverflowText: () => {},
 	handleKeyControls: () => {
 		document.addEventListener(
 			'keydown',
 			function (e) {
 				const target = e.target as Element;
+
+				// Global shortcuts (work even when not focused on body)
+				if (isMeta(e) && e.key.toLowerCase() === 'h' && !isTypingTarget(target)) {
+					e.preventDefault();
+					filterStore.album = null;
+					musicStore.listType = MusicListType.Home;
+					return;
+				}
+
+				if (isMeta(e) && e.key.toLowerCase() === 'k') {
+					e.preventDefault();
+					shortcutStore.focusSearch++;
+					return;
+				}
+
+				if (isMeta(e) && e.key === '/') {
+					e.preventDefault();
+					shortcutStore.showHelp = true;
+					ModalService.open(Modal.KeyboardShortcuts);
+					return;
+				}
+
+				if (isMeta(e) && e.key === ',' && !isTypingTarget(target)) {
+					e.preventDefault();
+					PageService.goTo(PageRoutes.SETTINGS);
+					return;
+				}
+
+				if (isMeta(e) && e.key === 'ArrowRight' && !isTypingTarget(target)) {
+					e.preventDefault();
+					MusicPlayerService.next();
+					return;
+				}
+
+				if (isMeta(e) && e.key === 'ArrowLeft' && !isTypingTarget(target)) {
+					e.preventDefault();
+					MusicPlayerService.previous();
+					return;
+				}
+
 				const handledKeys = ['Space', 'Tab', 'Escape'];
 
 				if (target == document.body && handledKeys.includes(e.code || e.key)) e.preventDefault();
@@ -63,7 +81,7 @@ const UIInteractionService = {
 
 						document.body.focus();
 					}
-					if (target.matches('input, textarea')) return;
+					if (isTypingTarget(target)) return;
 
 					if (musicStore.isPlaying) {
 						musicStore.isPlaying = false;
@@ -80,7 +98,7 @@ const UIInteractionService = {
 
 						document.body.focus();
 					}
-					if (target.matches('input, textarea')) return;
+					if (isTypingTarget(target)) return;
 				}
 			},
 			true

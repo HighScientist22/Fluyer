@@ -109,9 +109,8 @@ async function playShuffle() {
 }
 
 async function deletePlaylist() {
-	if (playlistStore.selectedPlaylist && playlistStore.selectedPlaylist.id) {
-		PlaylistService.delete(playlistStore.selectedPlaylist.id);
-		playlistStore.selectedPlaylist = null;
+	if (playlistStore.selectedPlaylist) {
+		await PlaylistService.delete(playlistStore.selectedPlaylist);
 	}
 }
 

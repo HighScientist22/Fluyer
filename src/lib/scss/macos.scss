@@ -1,0 +1,88 @@
+// macOS Tahoe 27+ refinements — liquid glass + home dashboard styling
+@import 'liquid-glass';
+
+.home-dashboard {
+	-webkit-font-smoothing: antialiased;
+}
+
+.home-glass-panel {
+	@extend .liquid-glass;
+	border-radius: var(--glass-radius-md);
+}
+
+.home-stat-card:not(:disabled):hover .home-glass-panel {
+	background: var(--glass-fill-hover);
+	border-color: var(--glass-border-hover);
+	transform: scale(1.02);
+}
+
+.home-greeting,
+.home-section-title {
+	font-family: 'New York', 'Georgia', 'Iowan Old Style', 'Palatino Linotype', serif;
+}
+
+.home-local-badge {
+	@extend .liquid-glass;
+	border-radius: 9999px;
+	background: color-mix(in srgb, rgb(16, 185, 129) 15%, var(--glass-fill));
+	border-color: color-mix(in srgb, rgb(16, 185, 129) 30%, var(--glass-border));
+}
+
+.home-theme-bg {
+	position: fixed;
+	inset: 0;
+	z-index: -1;
+	pointer-events: none;
+	overflow: hidden;
+
+	&__gradient {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(
+			180deg,
+			var(--home-bg-top, rgb(15, 15, 25)) 0%,
+			var(--home-bg-bottom, rgb(5, 5, 12)) 100%
+		);
+		transition: background 0.8s ease-in-out;
+	}
+
+	&__art {
+		position: absolute;
+		inset: -10%;
+		background-size: cover;
+		background-position: center;
+		filter: blur(90px);
+		opacity: 0.55;
+		transform: scale(1.1);
+		transition: opacity 1.5s ease-in-out;
+	}
+}
+
+.theme-light {
+	color-scheme: light;
+
+	body,
+	html {
+		background-color: #f2f2f7;
+	}
+
+	* {
+		@apply text-gray-900;
+	}
+}
+
+@media (prefers-color-scheme: light) {
+	:root:not(.theme-dark):not([data-app-theme='dark']) {
+		&[data-app-theme='system'] {
+			color-scheme: light;
+		}
+	}
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not(.theme-light):not([data-app-theme='light']) {
+		&[data-app-theme='system'] {
+			color-scheme: dark;
+		}
+	}
+}

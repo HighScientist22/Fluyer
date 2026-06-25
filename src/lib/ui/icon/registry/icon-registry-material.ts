@@ -28,11 +28,15 @@ import Folder from 'svelte-material-icons/Folder.svelte';
 import SortAscending from 'svelte-material-icons/SortAscending.svelte';
 import SortDescending from 'svelte-material-icons/SortDescending.svelte';
 import GridLarge from 'svelte-material-icons/GridLarge.svelte';
+import HomeOutline from 'svelte-material-icons/HomeOutline.svelte';
 import Album from 'svelte-material-icons/Album.svelte';
 import PlaylistMusicOutline from 'svelte-material-icons/PlaylistMusicOutline.svelte';
 import Check from 'svelte-material-icons/Check.svelte';
 import Close from 'svelte-material-icons/Close.svelte';
 import Image from 'svelte-material-icons/Image.svelte';
+import Heart from 'svelte-material-icons/Heart.svelte';
+import AutoFix from 'svelte-material-icons/AutoFix.svelte';
+import KeyboardOutline from 'svelte-material-icons/KeyboardOutline.svelte';
 import Menu from 'svelte-material-icons/Menu.svelte';
 import PlaylistMusic from 'svelte-material-icons/PlaylistMusic.svelte';
 
@@ -70,6 +74,7 @@ const iconRegistryMaterial = {
 	[IconType.Folder]: Folder,
 	[IconType.SortAsc]: SortAscending,
 	[IconType.SortDesc]: SortDescending,
+	[IconType.MusicListTypeHome]: HomeOutline,
 	[IconType.MusicListTypeAll]: GridLarge,
 	[IconType.MusicListTypeAlbum]: Album,
 	[IconType.MusicListTypeMusic]: MusicNote,
@@ -80,7 +85,10 @@ const iconRegistryMaterial = {
 	[IconType.Cancel]: Close,
 	[IconType.Image]: Image,
 	[IconType.Menu]: Menu,
-	[IconType.Queue]: PlaylistMusic
+	[IconType.Queue]: PlaylistMusic,
+	[IconType.Heart]: Heart,
+	[IconType.Sparkle]: AutoFix,
+	[IconType.Keyboard]: KeyboardOutline
 };
 
 export default iconRegistryMaterial;

@@ -67,7 +67,7 @@
 					>
 						<Icon type={IconType.Shuffle} />
 					</button>
-					{#if musicStore.listType === MusicListType.Playlist}
+					{#if musicStore.listType === MusicListType.Playlist && playlistStore.selectedPlaylist && (playlistStore.selectedPlaylist.smartRule || (!playlistStore.selectedPlaylist.isSmart && playlistStore.selectedPlaylist.id))}
 						<button
 							class="flex h-6 w-6 items-center justify-center md:h-7 md:w-7"
 							onclick={vm.deletePlaylist}

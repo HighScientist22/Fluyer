@@ -5,16 +5,36 @@ import playlistStore from '$lib/stores/playlist.svelte';
 import TauriPlaylistAPI from '$lib/tauri/TauriPlaylistAPI';
 import MetadataService from './MetadataService.svelte';
 import ModalService from './ModalService.svelte';
+import SmartPlaylistService from './SmartPlaylistService.svelte';
 
 const PlaylistService = {
 	initialize: () => {
 		PlaylistService.loadPlaylist();
 	},
 	loadPlaylist: async () => {
-		playlistStore.list = await TauriPlaylistAPI.getAll();
+		const [manual, customSmart] = await Promise.all([
+			TauriPlaylistAPI.getAll(),
+			SmartPlaylistService.loadCustomPlaylists()
+		]);
+		playlistStore.list = [
+			...SmartPlaylistService.getPresetPlaylists(),
+			...customSmart,
+			...manual
+		];
+	},
+	selectPlaylist: async (playlist: PlaylistData) => {
+		if (playlist.isSmart) {
+			const paths = await SmartPlaylistService.resolve(playlist);
+			playlistStore.selectedPlaylist = { ...playlist, paths };
+		} else {
+			playlistStore.selectedPlaylist = playlist;
+		}
 	},
 	showModal: () => {
 		ModalService.open(Modal.CreatePlaylist);
+	},
+	showSmartPlaylistModal: () => {
+		ModalService.open(Modal.SmartPlaylist);
 	},
 	requestUploadImage: async () => {
 		const uploadedImagePath = await TauriPlaylistAPI.uploadImage();
@@ -43,31 +63,23 @@ const PlaylistService = {
 	getCoverArt: async (id: number) => {
 		try {
 			const arrayBuffer = await TauriPlaylistAPI.readImage(id);
-			console.log(
-				`[PlaylistService] readImage returned buffer of size: ${arrayBuffer?.byteLength}`
-			);
-			if (arrayBuffer !== null && arrayBuffer.byteLength >= 4) {
-				const bytes = new Uint8Array(arrayBuffer.slice(0, 4));
-				console.log(
-					`[PlaylistService] Magic bytes: ${Array.from(bytes)
-						.map((b) => b.toString(16).padStart(2, '0'))
-						.join(' ')}`
-				);
-			}
 			if (arrayBuffer !== null && MetadataService.isValidImageBuffer(arrayBuffer)) {
 				const blob = new Blob([arrayBuffer], { type: 'image/png' });
 				return URL.createObjectURL(blob);
-			} else if (arrayBuffer !== null) {
-				console.warn(`[PlaylistService] Invalid image buffer for playlist ${id}`);
 			}
 		} catch (e) {
 			console.error(e);
 		}
 		return MusicConfig.defaultCoverArt;
 	},
-	delete: async (id: number) => {
-		await TauriPlaylistAPI.delete(id);
-		PlaylistService.loadPlaylist();
+	delete: async (playlist: PlaylistData) => {
+		if (playlist.isSmart && playlist.smartRule && playlist.id) {
+			await SmartPlaylistService.delete(playlist.id);
+		} else if (playlist.id && !playlist.isSmart) {
+			await TauriPlaylistAPI.delete(playlist.id);
+		}
+		playlistStore.selectedPlaylist = null;
+		await PlaylistService.loadPlaylist();
 	}
 };
 

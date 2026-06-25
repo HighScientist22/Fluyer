@@ -5,7 +5,6 @@
 	import { afterNavigate } from '$app/navigation';
 	import MetadataService from '$lib/services/MetadataService.svelte';
 	import musicStore from '$lib/stores/music.svelte';
-	import LibraryService from '$lib/services/LibraryService.svelte';
 	import settingStore from '$lib/stores/setting.svelte';
 	import { SettingAnimatedBackgroundType } from '$lib/features/settings/animated_background/types';
 	// @ts-ignore
@@ -111,11 +110,7 @@
 
 		if (!isInitialized) {
 			isInitialized = true;
-			// Note: Why? To prevent updateBackground from being called multiple times
-			// Since the effects references multiple stores
 			setTimeout(() => (canUpdate = true), 1000);
-
-			LibraryService.initialize();
 			console.log('AnimatedBackground is initialized (WGPU)');
 		}
 	}
