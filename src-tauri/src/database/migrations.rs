@@ -93,6 +93,14 @@ pub const MIGRATIONS_SLICE: &[M<'_>] = &[
         path TEXT NOT NULL UNIQUE,
         created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
+
+    CREATE TABLE smart_playlists (
+        id INTEGER PRIMARY KEY,
+        name TEXT NOT NULL,
+        match_all INTEGER NOT NULL DEFAULT 1,
+        rules_json TEXT NOT NULL,
+        created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
     ",
     ),
 ];

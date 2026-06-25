@@ -58,4 +58,7 @@ export interface PlaylistData {
 	title?: string;
 	artist?: string;
 	paths: string[];
+	isSmart?: boolean;
+	smartPreset?: import('$lib/features/smart_playlist/types').SmartPlaylistPreset;
+	smartRule?: import('$lib/features/smart_playlist/types').SmartPlaylistRule;
 }

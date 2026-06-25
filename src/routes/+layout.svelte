@@ -21,6 +21,8 @@
 	import MetadataService from '$lib/services/MetadataService.svelte';
 	import ToastContainer from '$lib/ui/toast/ToastContainer.svelte';
 	import CreatePlaylistModal from '$lib/features/playlist/components/CreatePlaylistModal.svelte';
+	import SmartPlaylistBuilderModal from '$lib/features/smart_playlist/components/SmartPlaylistBuilderModal.svelte';
+	import KeyboardShortcutsModal from '$lib/features/shortcuts/components/KeyboardShortcutsModal.svelte';
 	import StatsService from '$lib/services/StatsService.svelte';
 	import PlaylistService from '$lib/services/PlaylistService.svelte';
 	import UpdateService from '$lib/services/UpdateService.svelte';
@@ -85,3 +87,5 @@
 	{/if}
 {/if}
 <CreatePlaylistModal />
+<SmartPlaylistBuilderModal />
+<KeyboardShortcutsModal />

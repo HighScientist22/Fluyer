@@ -1,7 +1,9 @@
 import type { PlaylistData } from '$lib/features/music/types';
-import playlistStore from '$lib/stores/playlist.svelte';
 import { COVER_ART_DEBOUNCE_DELAY } from '$lib/services/CoverArtService.svelte';
+import MetadataService from '$lib/services/MetadataService.svelte';
 import PlaylistService from '$lib/services/PlaylistService.svelte';
+import SmartPlaylistService from '$lib/services/SmartPlaylistService.svelte';
+import TauriLibraryAPI from '$lib/tauri/TauriLibraryAPI';
 
 export function usePlaylistItem(getPlaylist: () => PlaylistData, getVisible: () => boolean) {
 	let coverArt = $state<Promise<string | null> | null>(null);
@@ -13,20 +15,30 @@ export function usePlaylistItem(getPlaylist: () => PlaylistData, getVisible: () 
 
 		let cancelled = false;
 		const timeoutId = setTimeout(async () => {
-			const id = getPlaylist().id;
-			if (cancelled || id === undefined) return;
+			const playlist = getPlaylist();
+			let imagePromise: Promise<string | null>;
 
-			const imagePromise = PlaylistService.getCoverArt(id);
+			if (playlist.isSmart) {
+				const paths = await SmartPlaylistService.resolve(playlist);
+				const firstPath = paths[0];
+				if (firstPath) {
+					const music = await TauriLibraryAPI.getMusicByPath(firstPath);
+					imagePromise = MetadataService.getMusicCoverArt(music ?? undefined);
+				} else {
+					imagePromise = Promise.resolve(null);
+				}
+			} else if (playlist.id !== undefined) {
+				imagePromise = PlaylistService.getCoverArt(playlist.id);
+			} else {
+				imagePromise = Promise.resolve(null);
+			}
+
 			coverArt = imagePromise;
 
 			const url = await imagePromise;
 			if (!cancelled) {
-				if (currentBlobUrl) {
-					URL.revokeObjectURL(currentBlobUrl);
-				}
-				if (url) {
-					currentBlobUrl = url;
-				}
+				if (currentBlobUrl) URL.revokeObjectURL(currentBlobUrl);
+				if (url) currentBlobUrl = url;
 			}
 		}, COVER_ART_DEBOUNCE_DELAY);
 
@@ -40,8 +52,8 @@ export function usePlaylistItem(getPlaylist: () => PlaylistData, getVisible: () 
 		};
 	});
 
-	function selectPlaylist() {
-		playlistStore.selectedPlaylist = getPlaylist();
+	async function selectPlaylist() {
+		await PlaylistService.selectPlaylist(getPlaylist());
 	}
 
 	return {

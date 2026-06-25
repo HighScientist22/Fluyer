@@ -1,3 +1,5 @@
 export enum Modal {
-	CreatePlaylist = 'create-playlist'
+	CreatePlaylist = 'create-playlist',
+	SmartPlaylist = 'smart-playlist',
+	KeyboardShortcuts = 'keyboard-shortcuts'
 }

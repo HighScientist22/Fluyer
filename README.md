@@ -74,6 +74,70 @@ Inspired by [Aries](https://github.com/HighScientist22/aries) — a native macOS
 
 ---
 
+## 🛠 Development
+
+### Prerequisites
+
+| Tool | Version | Notes |
+|------|---------|-------|
+| [Bun](https://bun.sh) | latest | Package manager & scripts |
+| [Rust](https://rustup.rs) | stable | Tauri backend |
+| [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/) | — | Platform-specific deps |
+
+**macOS (recommended for Tahoe 27):**
+```bash
+xcode-select --install
+# Install Bun
+curl -fsSL https://bun.sh/install | bash
+# Install Rust
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+**Windows:** Install [Visual Studio Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) with C++ workload, plus [WebView2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/).
+
+**Linux (Ubuntu/Debian):**
+```bash
+sudo apt update
+sudo apt install -y libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev \
+  libssl-dev libayatana-appindicator3-dev librsvg2-dev patchelf
+```
+
+### Clone & run
+
+```bash
+git clone https://github.com/HighScientist22/Fluyer.git
+cd Fluyer
+git checkout cursor/roon-home-dashboard-f5a8   # latest feature branch
+
+cp .env.example .env
+bun install
+bun run init          # downloads BASS + FFmpeg native libs
+bun run tauri dev     # launches the app in dev mode
+```
+
+### Useful commands
+
+```bash
+bun run tauri dev      # Dev mode with hot reload
+bun run tauri build    # Production build (.app / .exe / .deb)
+bun run check          # TypeScript + Svelte type check
+bun run lint           # ESLint
+bun run format         # Prettier + rustfmt
+```
+
+### Keyboard shortcuts (in-app)
+
+| Shortcut | Action |
+|----------|--------|
+| `⌘/Ctrl H` | Go to Home dashboard |
+| `⌘/Ctrl K` | Focus search |
+| `Space` | Play / Pause |
+| `⌘/Ctrl ←` | Previous track |
+| `⌘/Ctrl →` | Next track |
+| `⌘/Ctrl /` | Show shortcuts |
+
+---
+
 ## 🐞 Known Issues
 
 ### macOS

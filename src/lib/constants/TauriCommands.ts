@@ -83,5 +83,12 @@ export const TauriCommands = {
 	STATS_ARTISTS_GET: 'stats_artists_get',
 	FAVORITES_TOGGLE: 'favorites_toggle',
 	FAVORITES_IS: 'favorites_is',
-	FAVORITES_ALL_GET: 'favorites_all_get'
+	FAVORITES_ALL_GET: 'favorites_all_get',
+
+	// Smart playlists
+	SMART_PLAYLIST_ALL_GET: 'smart_playlist_all_get',
+	SMART_PLAYLIST_CREATE: 'smart_playlist_create',
+	SMART_PLAYLIST_DELETE: 'smart_playlist_delete',
+	SMART_PLAYLIST_RESOLVE_PRESET: 'smart_playlist_resolve_preset',
+	SMART_PLAYLIST_RESOLVE_RULE: 'smart_playlist_resolve_rule'
 };

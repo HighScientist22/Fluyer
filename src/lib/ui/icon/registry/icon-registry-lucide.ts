@@ -35,6 +35,9 @@ import Plus from '@lucide/svelte/icons/plus';
 import Check from '@lucide/svelte/icons/check';
 import X from '@lucide/svelte/icons/x';
 import Image from '@lucide/svelte/icons/image';
+import Heart from '@lucide/svelte/icons/heart';
+import Sparkles from '@lucide/svelte/icons/sparkles';
+import Keyboard from '@lucide/svelte/icons/keyboard';
 import AlignJustify from '@lucide/svelte/icons/align-justify';
 
 const iconRegistryLucide = {
@@ -82,7 +85,10 @@ const iconRegistryLucide = {
 	[IconType.Cancel]: X,
 	[IconType.Image]: Image,
 	[IconType.Menu]: AlignJustify,
-	[IconType.Queue]: ListMusic
+	[IconType.Queue]: ListMusic,
+	[IconType.Heart]: Heart,
+	[IconType.Sparkle]: Sparkles,
+	[IconType.Keyboard]: Keyboard
 };
 
 export default iconRegistryLucide;

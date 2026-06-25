@@ -1,10 +1,34 @@
 import TauriStatsAPI from '$lib/tauri/TauriStatsAPI';
+import favoritesStore from '$lib/stores/favorites.svelte';
 import type { LibraryStats } from '$lib/features/home/types';
 
 let lastRecordedPath: string | null = null;
 
 const StatsService = {
-	initialize: async () => {},
+	initialize: async () => {
+		await StatsService.loadFavorites();
+	},
+
+	loadFavorites: async () => {
+		try {
+			const paths = await TauriStatsAPI.getFavorites();
+			favoritesStore.paths = new Set(paths);
+		} catch (e) {
+			console.warn('Failed to load favorites:', e);
+		}
+	},
+
+	isFavorite: (path: string) => favoritesStore.paths.has(path),
+
+	toggleFavorite: async (path: string): Promise<boolean> => {
+		const isNowFavorite = await TauriStatsAPI.toggleFavorite(path);
+		if (isNowFavorite) {
+			favoritesStore.paths.add(path);
+		} else {
+			favoritesStore.paths.delete(path);
+		}
+		return isNowFavorite;
+	},
 
 	recordPlay: async (path: string, durationSeconds: number) => {
 		if (!path || lastRecordedPath === path) return;
@@ -29,12 +53,6 @@ const StatsService = {
 	getGenreStats: (limit?: number) => TauriStatsAPI.getGenreStats(limit),
 
 	getArtists: (limit?: number) => TauriStatsAPI.getArtists(limit),
-
-	toggleFavorite: (path: string) => TauriStatsAPI.toggleFavorite(path),
-
-	isFavorite: (path: string) => TauriStatsAPI.isFavorite(path),
-
-	getFavorites: () => TauriStatsAPI.getFavorites(),
 
 	formatListenTime: (seconds: number): string => {
 		if (seconds < 60) return '< 1 min';

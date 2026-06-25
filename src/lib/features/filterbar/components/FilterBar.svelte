@@ -14,8 +14,16 @@
 	import ConfirmCancelButtons from './ConfirmCancelButtons.svelte';
 	import ListModeSelector from './ListModeSelector.svelte';
 	import AddPlaylistButton from './AddPlaylistButton.svelte';
+	import shortcutStore from '$lib/stores/shortcut.svelte';
+	import PlaylistService from '$lib/services/PlaylistService.svelte';
 
 	const vm = useFilterBar();
+	let searchInput = $state<HTMLInputElement>();
+
+	$effect(() => {
+		shortcutStore.focusSearch;
+		searchInput?.focus();
+	});
 </script>
 
 <svelte:window onresize={vm.updateSize} />
@@ -53,6 +61,7 @@
 			icon={IconType.Search}
 			placeholder="Search..."
 			bind:value={filterStore.search}
+			bind:inputElement={searchInput}
 		/>
 
 		<Button
@@ -94,6 +103,15 @@
 				/>
 				{#if musicStore.listType === 'playlist' && vm.state.columns < 5}
 					<AddPlaylistButton onclick={vm.startPlaylistCreation} />
+					<Button
+						class="pointer-events-auto grid aspect-square h-9 shrink-0 items-center justify-center rounded"
+						onclick={() => PlaylistService.showSmartPlaylistModal()}
+						title="Create smart playlist"
+					>
+						<div class="w-5">
+							<Icon type={IconType.Sparkle} />
+						</div>
+					</Button>
 				{/if}
 			{/if}
 		</div>
@@ -115,6 +133,15 @@
 				/>
 				{#if musicStore.listType === 'playlist'}
 					<AddPlaylistButton onclick={vm.startPlaylistCreation} />
+					<Button
+						class="pointer-events-auto grid aspect-square h-9 shrink-0 items-center justify-center rounded"
+						onclick={() => PlaylistService.showSmartPlaylistModal()}
+						title="Create smart playlist"
+					>
+						<div class="w-5">
+							<Icon type={IconType.Sparkle} />
+						</div>
+					</Button>
 				{/if}
 			{/if}
 		</div>
@@ -127,6 +154,15 @@
 			/>
 		{:else if musicStore.listType === 'playlist' && vm.state.columns >= 5}
 			<AddPlaylistButton onclick={vm.startPlaylistCreation} />
+			<Button
+				class="pointer-events-auto grid aspect-square h-9 shrink-0 items-center justify-center rounded"
+				onclick={() => PlaylistService.showSmartPlaylistModal()}
+				title="Create smart playlist"
+			>
+				<div class="w-5">
+					<Icon type={IconType.Sparkle} />
+				</div>
+			</Button>
 		{/if}
 	</div>
 	<div
@@ -140,6 +176,7 @@
 			icon={IconType.Search}
 			placeholder="Search..."
 			bind:value={filterStore.search}
+			bind:inputElement={searchInput}
 		/>
 
 		{#if isMobile()}

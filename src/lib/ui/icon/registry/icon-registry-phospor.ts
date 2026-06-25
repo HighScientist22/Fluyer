@@ -35,6 +35,9 @@ import PlusIcon from 'phosphor-svelte/lib/PlusIcon';
 import CheckIcon from 'phosphor-svelte/lib/CheckIcon';
 import XIcon from 'phosphor-svelte/lib/XIcon';
 import ImageIcon from 'phosphor-svelte/lib/ImageIcon';
+import HeartIcon from 'phosphor-svelte/lib/HeartIcon';
+import SparkleIcon from 'phosphor-svelte/lib/SparkleIcon';
+import KeyboardIcon from 'phosphor-svelte/lib/KeyboardIcon';
 import ListIcon from 'phosphor-svelte/lib/ListIcon';
 
 const iconRegistryPhospor = {
@@ -82,7 +85,10 @@ const iconRegistryPhospor = {
 	[IconType.Cancel]: XIcon,
 	[IconType.Image]: ImageIcon,
 	[IconType.Menu]: ListIcon,
-	[IconType.Queue]: QueueIcon
+	[IconType.Queue]: QueueIcon,
+	[IconType.Heart]: HeartIcon,
+	[IconType.Sparkle]: SparkleIcon,
+	[IconType.Keyboard]: KeyboardIcon
 };
 
 export default iconRegistryPhospor;

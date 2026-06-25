@@ -95,4 +95,10 @@ pub const COMMAND_HANDLERS: fn(tauri::ipc::Invoke) -> bool = tauri::generate_han
     crate::stats::commands::favorites_toggle,
     crate::stats::commands::favorites_is,
     crate::stats::commands::favorites_all_get,
+    // Smart playlists
+    crate::smart_playlist::commands::smart_playlist_all_get,
+    crate::smart_playlist::commands::smart_playlist_create,
+    crate::smart_playlist::commands::smart_playlist_delete,
+    crate::smart_playlist::commands::smart_playlist_resolve_preset,
+    crate::smart_playlist::commands::smart_playlist_resolve_rule,
 ];

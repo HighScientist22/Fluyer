@@ -9,7 +9,8 @@
 	import filterBarStore from '$lib/stores/filterBar.svelte';
 	import musicStore from '$lib/stores/music.svelte';
 	import { MusicListType } from '../types';
-	import folderStore from '$lib/stores/folder.svelte';
+	import StatsService from '$lib/services/StatsService.svelte';
+	import favoritesStore from '$lib/stores/favorites.svelte';
 
 	interface Props {
 		musicIndex?: number;
@@ -54,6 +55,16 @@
 	const isSelectedForPlaylist = $derived(
 		resolvedMusic ? playlistStore.selectedPaths.includes(resolvedMusic.path) : false
 	);
+
+	const isFavorite = $derived(
+		resolvedMusic ? favoritesStore.paths.has(resolvedMusic.path) : false
+	);
+
+	async function toggleFavorite(e: MouseEvent) {
+		e.stopPropagation();
+		if (!resolvedMusic) return;
+		await StatsService.toggleFavorite(resolvedMusic.path);
+	}
 
 	function togglePlaylistSelection() {
 		if (!resolvedMusic) return;
@@ -116,7 +127,21 @@
 			</p>
 		</div>
 
-		<div class="h-12 w-12 ps-2 md:h-14 md:w-14"></div>
+		<div class="h-12 w-12 ps-2 md:h-14 md:w-14">
+			{#if resolvedMusic && !folder && !playlistStore.isCreating}
+				<button
+					class="flex aspect-square h-full w-full items-center justify-center opacity-60 transition-opacity hover:opacity-100"
+					onclick={toggleFavorite}
+				>
+					<div
+						class="h-5 w-5 {isFavorite ? 'text-rose-400' : ''}"
+						style={isFavorite ? '' : 'opacity: 0.7'}
+					>
+						<Icon type={IconType.Heart} />
+					</div>
+				</button>
+			{/if}
+		</div>
 	</div>
 
 	<div class="absolute left-0 top-0 w-full py-2">
