@@ -25,6 +25,7 @@
 	import KeyboardShortcutsModal from '$lib/features/shortcuts/components/KeyboardShortcutsModal.svelte';
 	import StatsService from '$lib/services/StatsService.svelte';
 	import PlaylistService from '$lib/services/PlaylistService.svelte';
+	import LibraryService from '$lib/services/LibraryService.svelte';
 	import UpdateService from '$lib/services/UpdateService.svelte';
 
 	if (isLinux()) {
@@ -54,7 +55,8 @@
 			FolderService.initialize(),
 			MetadataService.initialize(),
 			PlaylistService.initialize(),
-			StatsService.initialize()
+			StatsService.initialize(),
+			LibraryService.initialize()
 		]);
 
 		if (isDesktop()) {

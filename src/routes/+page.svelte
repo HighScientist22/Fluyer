@@ -37,7 +37,11 @@
 	let tooltipVisible = $state(false);
 </script>
 
-{#if musicStore.isLibraryLoaded === false}
+{#if musicStore.isLibraryLoaded === null}
+	<div class="grid h-full items-center justify-center">
+		<p class="text-opacity-background-60 animate-pulse text-lg">Loading Fluyer...</p>
+	</div>
+{:else if musicStore.isLibraryLoaded === false}
 	<Intro />
 {:else if musicStore.isLibraryLoaded === true}
 	<!--{#if isDesktop()}-->

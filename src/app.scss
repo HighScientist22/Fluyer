@@ -7,6 +7,11 @@
 @import 'lib/scss/show-then-fade';
 @import 'lib/scss/components';
 
+html,
+body {
+	background-color: #0b0b12;
+}
+
 * {
 	-webkit-user-select: none;
 	user-select: none;
