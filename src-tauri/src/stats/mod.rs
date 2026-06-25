@@ -213,7 +213,7 @@ pub fn get_genre_stats(limit: usize) -> Result<Vec<GenreStat>, String> {
         .query_map(params![limit as i64], |row| {
             Ok(GenreStat {
                 genre: row.get(0)?,
-                play_count: row.get(1)?,
+                play_count: row.get::<_, i64>(1)? as usize,
                 listen_seconds: row.get(2)?,
             })
         })

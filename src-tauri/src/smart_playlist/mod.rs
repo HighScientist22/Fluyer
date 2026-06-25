@@ -1,3 +1,5 @@
+pub mod commands;
+
 use crate::database::database::GLOBAL_DATABASE;
 use crate::folder::database::get_tracks;
 use crate::music::metadata::MusicMetadata;
@@ -190,7 +192,7 @@ fn get_play_counts_map() -> Result<HashMap<String, usize>, String> {
         .prepare("SELECT path, COUNT(*) FROM play_history GROUP BY path")
         .map_err(|e| e.to_string())?;
     let map = stmt
-        .query_map([], |row| Ok((row.get::<_, String>(0)?, row.get::<_, usize>(1)?)))
+        .query_map([], |row| Ok((row.get::<_, String>(0)?, row.get::<_, i64>(1)? as usize)))
         .map_err(|e| e.to_string())?
         .filter_map(|r| r.ok())
         .collect();

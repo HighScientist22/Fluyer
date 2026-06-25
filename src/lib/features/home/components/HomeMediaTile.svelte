@@ -5,8 +5,6 @@
 	import favoritesStore from '$lib/stores/favorites.svelte';
 	import Icon from '$lib/ui/icon/Icon.svelte';
 	import { IconType } from '$lib/ui/icon/types';
-	import Icon from '$lib/ui/icon/Icon.svelte';
-	import { IconType } from '$lib/ui/icon/types';
 
 	interface Props {
 		title: string;
